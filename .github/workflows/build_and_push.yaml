@@ -39,7 +39,7 @@ jobs:
         with:
           vault_key: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
           #command: "ansible-vault decrypt ./deploy/.env"
-          command: "ls -al"
+          command: "ls -al ./deploy"
       - name: Update compose
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
