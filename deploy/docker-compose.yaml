@@ -30,7 +30,7 @@ services:
 #      dockerfile: Dockerfile
 #    restart: always
     env_file:
-      - ./bibaboba
+      - ./bibabobaa
     environment:
       POSTGRES_HOST: postgres1
     depends_on:
