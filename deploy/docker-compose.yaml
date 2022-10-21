@@ -23,7 +23,7 @@ services:
 
 
   api:
-    image: ${DOCKERHUB_USERNAME}/34_diploma_6:latest
+    image: ${DOCKERHUB_USERNAME}/35_diploma_6:latest
 
 #    build:
 #      context: .
