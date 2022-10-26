@@ -23,7 +23,7 @@ services:
 
 
   api:
-    image: ${DOCKERHUB_USERNAME}/35_diploma_6:latest
+    image: ${DOCKERHUB_USERNAME}/36_diploma_6:latest
 
 #    build:
 #      context: .
@@ -44,7 +44,7 @@ services:
 
 
   frontend:
-    image: sermalenk/skypro-front:lesson-34
+    image: sermalenk/skypro-front:lesson-36
     restart: always
     depends_on:
       - api
