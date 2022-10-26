@@ -1,4 +1,4 @@
-from goals.models import GoalCategory, Goal
+from goals.models import GoalCategory, Goal, GoalComment
 from django.contrib import admin
 
 
@@ -18,3 +18,11 @@ class GoalAdmin(admin.ModelAdmin):
     search_fields = ("title", "description")
     list_filter = ('status', "priority")
     readonly_fields = ('created', 'updated',)
+
+
+@admin.register(GoalComment)
+class GoalCommentsAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "text")
+    list_display_links = ("text",)
+    search_fields = ("text",)
+    readonly_fields = ('created', 'updated')
