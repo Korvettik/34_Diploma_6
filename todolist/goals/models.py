@@ -43,7 +43,7 @@ class Goal(BaseModel):
 
     title = models.CharField(
         verbose_name='Название',
-        max_length=255, )
+        max_length=255)
     description = models.TextField(
         verbose_name='Описание',
         null=True,

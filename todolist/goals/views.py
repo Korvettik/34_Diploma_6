@@ -1,5 +1,8 @@
+from django.db import transaction
 from django.db.models import Q
 from django_filters import OrderingFilter
+
+
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
@@ -23,7 +26,7 @@ class GoalCategoryListView(ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalCategorySerializer
     # pagination_class = LimitOffsetPagination
-    filter_backends = [OrderingFilter, SearchFilter]
+    filter_backends = [filters.OrderingFilter, SearchFilter]
     ordering_fields = ["title", "created"]
     ordering = ["title"]
     search_fields = ["title"]
@@ -42,8 +45,13 @@ class GoalCategoryView(RetrieveUpdateDestroyAPIView):
 
     def perform_destroy(self, instance: GoalCategory):
         #########
-        instance.is_deleted = True
-        instance.save(update_fields=('is_deleted',))
+        # instance.is_deleted = True
+        # instance.save(update_fields=('is_deleted',))
+        # return instance
+        with transaction.atomic():
+            instance.is_deleted = True
+            instance.save(update_fields=('is_deleted',))
+            instance.goals.update(status=Goal.Status.archived)
         return instance
 
 
@@ -58,7 +66,7 @@ class GoalListView(ListAPIView):
     serializer_class = GoalSerializer
     # pagination_class = LimitOffsetPagination
     filterset_class = GoalDateFilter
-    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, SearchFilter]
     ordering_fields = ["title", "created"]
     ordering = ["title"]
     search_fields = ["title", "description"]
@@ -89,7 +97,7 @@ class GoalCommentListView(ListAPIView):
     model = GoalComment
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalCommentSerializer
-    filter_backends = [OrderingFilter, SearchFilter]
+    filter_backends = [filters.OrderingFilter, SearchFilter]
     filterset_fields = ['goal']
     ordering = ["-created"]
 
