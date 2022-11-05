@@ -3,11 +3,11 @@ from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 
 from core.models import User
-from core.serialazers import CreateUserSerialiser, LoginSerializer, ProfileSerializer, UpdatePasswordSerializer
+from core.serialazers import CreateUserSerializer, LoginSerializer, ProfileSerializer, UpdatePasswordSerializer
 
 
 class SignupView(generics.CreateAPIView):
-    serializer_class = CreateUserSerialiser
+    serializer_class = CreateUserSerializer
 
 
 class LoginView(generics.CreateAPIView):

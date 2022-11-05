@@ -38,26 +38,10 @@ class GoalPermissions(IsAuthenticated):
         return BoardParticipant.objects.filter(**filters).exists()
 
 
-class GoalComments:
-    pass
-
-
 class CommentsPermissions(IsAuthenticated):
     def has_object_permission(self, request, view, obj: GoalComment):
         return any((
                 request.method in permissions.SAFE_METHODS,
                 obj.user_id == request.user.id,
         ))
-
-
-
-
-
-
-
-
-
-
-
-
 

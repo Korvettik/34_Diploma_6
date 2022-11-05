@@ -16,7 +16,7 @@ class PasswordField(serializers.CharField):
         self.validators.append(validate_password)
 
 
-class CreateUserSerialiser(serializers.ModelSerializer):
+class CreateUserSerializer(serializers.ModelSerializer):
     password = PasswordField(required=True)
     password_repeat = PasswordField(required=True)
 
