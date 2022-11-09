@@ -180,3 +180,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     )
 }
+
+
+BOT_TOKEN = env("BOT_TOKEN")
