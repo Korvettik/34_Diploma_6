@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 class MessageFrom(BaseModel):
     id: int
     first_name: str
+
     last_name: str | None = None
     # last_name: str
     username: str
@@ -24,10 +25,11 @@ class Chat(BaseModel):
 
 class Message(BaseModel):
     message_id: int
+    # from_: MessageFrom = Field(None, alias='from')
     from_: MessageFrom = Field(..., alias='from')
     chat: Chat
-    # text: str | None = None
-    text: str
+    text: str | None = None
+    # text: str
 
     class Config:
         allow_population_by_field_name = True

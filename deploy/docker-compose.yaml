@@ -52,6 +52,24 @@ services:
 
 
 
+  bot:
+    image: ${DOCKERHUB_USERNAME}/38_diploma_6:latest
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_HOST: postgres1
+    depends_on:
+      postgres1:
+        condition: service_healthy
+    command: python3 manage.py runbot
+    networks:
+      - backend_nw
+
+
+
+
+
   frontend:
     image: sermalenk/skypro-front:lesson-38
     restart: always
