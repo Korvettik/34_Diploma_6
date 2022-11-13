@@ -15,14 +15,17 @@ from todolist import settings
 
 logger = logging.getLogger(__name__)
 
+
 class NewGoal(BaseModel):
     cat_id: int | None = None
     goal_title: str | None = None
+
     # {'cat_id': None, 'goal_title': None}
 
     @property
     def is_completed(self) -> bool:
-        return None not in [self.chat_id, self.goal_title]
+        return None not in [self.cat_id, self.goal_title]
+
 
 class StateEnum(IntEnum):
     CREATE_CATEGORY_SELECT = auto()
@@ -51,7 +54,7 @@ class Command(BaseCommand):
     def handle_goals_list(self, msg: Message, tg_user: TgUser):
         resp_goals: list[str] = [
             f'#{goal.id} {goal.title}'
-            for goal in Goal.objects.filter(user_id=tg_user.user_id.order_by('created'))
+            for goal in Goal.objects.filter(user_id=tg_user.user_id)
         ]
         if resp_goals:
             self.tg_client.send_message(msg.chat.id, '\n'.join(resp_goals))
@@ -71,15 +74,14 @@ class Command(BaseCommand):
         else:
             self.tg_client.send_message(msg.chat.id, '[you have no categories]')
 
-
     def handle_save_selected_category(self, msg: Message, tg_user: TgUser):
         if msg.text.isdigit():
             cat_id = int(msg.text)
             if GoalCategory.objects.filter(
-                board__participants__user_id=tg_user.user_id,
-                board__participants__role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
-                is_deleted=False,
-                id=cat_id
+                    board__participants__user_id=tg_user.user_id,
+                    board__participants__role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
+                    is_deleted=False,
+                    id=cat_id
             ).exists():
                 self.storage.update_data(chat_id=msg.chat.id, cat_id=cat_id)
                 self.tg_client.send_message(msg.chat.id, '[set title]')
@@ -88,7 +90,6 @@ class Command(BaseCommand):
                 self.tg_client.send_message(msg.chat.id, '[category not found]')
         else:
             self.tg_client.send_message(msg.chat.id, '[Invalid category id]')
-
 
     def handle_save_new_cat(self, msg: Message, tg_user: TgUser):
         goal = NewGoal(**self.storage.get_data(tg_user.chat_id))
@@ -105,7 +106,6 @@ class Command(BaseCommand):
             self.tg_client.send_message(msg.chat.id, '[something gone wrong]')
         self.storage.reset(tg_user.chat_id)
 
-
     def handle_verified_user(self, msg: Message, tg_user: TgUser):
         if msg.text == '/goals':
             self.handle_goals_list(msg, tg_user)
@@ -118,7 +118,7 @@ class Command(BaseCommand):
             self.storage.reset(tg_user.chat_id)
             self.tg_client.send_message(msg.chat.id, '[canceled]')
 
-        elif state := self.state.get_state(tg_user.chat_id):
+        elif state := self.storage.get_state(tg_user.chat_id):
             match state:
                 case StateEnum.CREATE_CATEGORY_SELECT:
                     self.handle_save_selected_category(msg, tg_user)
@@ -126,8 +126,6 @@ class Command(BaseCommand):
                     self.handle_save_new_cat(msg, tg_user)
                 case _:
                     logger.warning('Invalid state: %s', state)
-
-
 
         elif msg.text.startswith('/'):
             self.tg_client.send_message(msg.chat.id, '[unknown command]')
@@ -152,5 +150,5 @@ class Command(BaseCommand):
             for item in res.result:
                 offset = item.update_id + 1
                 self.handle_message(msg=item.message)
-                # self.tg_client.send_message(chat_id=item.message.chat.id, text=item.message.text)
-                # print(item.message)
+                # self.tg_client.send_message(chat_id=item.message.chat.id, text=item.message.text)  # ЭХО
+                print(item.message)  # принт в консоль

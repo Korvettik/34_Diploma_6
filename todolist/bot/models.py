@@ -8,6 +8,3 @@ class TgUser(models.Model):
     username = models.CharField(verbose_name='Username', max_length=255, null=True, blank=True, default=None)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
     verification_code = models.CharField(max_length=32, null=True, blank=True, default=None)
-
-
-
