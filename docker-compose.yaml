@@ -37,6 +37,7 @@ services:
     depends_on:
       postgres1:
         condition: service_healthy
+    command: python3 manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
@@ -46,11 +47,30 @@ services:
       - frontend_nw
 
 
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_HOST: postgres1
+    depends_on:
+      postgres1:
+        condition: service_healthy
+    command: python3 manage.py runbot
+    networks:
+      - backend_nw
+
+
+
 
   frontend:
 #    image: sermalenk/skypro-front:lesson-35
 #    image: sermalenk/skypro-front:lesson-36
-    image: sermalenk/skypro-front:lesson-37
+#    image: sermalenk/skypro-front:lesson-37
+    image: sermalenk/skypro-front:lesson-38
     restart: always
     depends_on:
       - api
