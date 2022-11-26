@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'goals.apps.GoalsConfig',
     'bot.apps.BotConfig',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -178,8 +179,16 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_FILTER_BACKEND': (
         'django_filters.rest_framework.DjangoFilterBackend',
-    )
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
 BOT_TOKEN = env("BOT_TOKEN")
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'TODO_List API',
+    'DESCRIPTION': 'TODO_List project with Telegram bot support ',
+    'VERSION': '1.0.0',
+}

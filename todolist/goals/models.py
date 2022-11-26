@@ -4,6 +4,7 @@ from core.models import User
 
 
 class BaseModel(models.Model):
+    """Время создания и обновления объекта"""
     created = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
     updated = models.DateTimeField(verbose_name="Дата последнего обновления", auto_now=True)
 
@@ -12,6 +13,7 @@ class BaseModel(models.Model):
 
 
 class Board(BaseModel):
+    """Доска"""
     title = models.CharField(verbose_name="Название", max_length=255)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
     class Meta:
@@ -20,6 +22,7 @@ class Board(BaseModel):
 
 
 class BoardParticipant(BaseModel):
+    """Доска-пользователь m2m"""
     class Role(models.IntegerChoices):
         owner = 1, "Владелец"
         writer = 2, "Редактор"
@@ -48,6 +51,7 @@ class BoardParticipant(BaseModel):
 
 
 class GoalCategory(BaseModel):
+    """Категория"""
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
@@ -63,6 +67,7 @@ class GoalCategory(BaseModel):
 
 
 class Goal(BaseModel):
+    """Цель"""
     class Meta:
         verbose_name = "Цель"
         verbose_name_plural = "Цели"
@@ -114,6 +119,7 @@ class Goal(BaseModel):
 
 
 class GoalComment(BaseModel):
+    """Комментарий к цели"""
     user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
