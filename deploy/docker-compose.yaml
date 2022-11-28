@@ -56,7 +56,7 @@ services:
     image: ${DOCKERHUB_USERNAME}/38_diploma_6:latest
     restart: always
     env_file:
-      - ./.env
+      - ./bibaboba
     environment:
       POSTGRES_HOST: postgres1
     depends_on:

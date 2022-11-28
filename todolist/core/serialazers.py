@@ -8,7 +8,7 @@ from core.models import User
 
 
 class PasswordField(serializers.CharField):
-
+    """Определение пароля"""
     def __init__(self, **kwargs):
         kwargs['style'] = {'input_type': 'password'}
         kwargs.setdefault('write_only', True)
@@ -17,6 +17,7 @@ class PasswordField(serializers.CharField):
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
+    """Создание пользователя"""
     password = PasswordField(required=True)
     password_repeat = PasswordField(required=True)
 
@@ -42,6 +43,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.ModelSerializer):
+    """Процедура проверки пользователя, авторизация"""
     username = serializers.CharField(required=True)
     password = PasswordField(required=True)
 
@@ -59,6 +61,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """Представление пользователя"""
     class Meta:
         model = User
         fields = ('id',
@@ -69,6 +72,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UpdatePasswordSerializer(serializers.Serializer):
+    """Обновление пароля пользователя"""
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     old_password = PasswordField(required=True)
     new_password = PasswordField(required=True)
@@ -87,3 +91,4 @@ class UpdatePasswordSerializer(serializers.Serializer):
         instance.password = make_password(validated_data['new_password'])
         instance.save(update_fields=('password',))
         return instance
+

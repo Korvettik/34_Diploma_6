@@ -5,7 +5,7 @@ from goals.models import BoardParticipant, Goal, GoalCategory, Board, GoalCommen
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
-
+    """Доступ (разрешено только создателю)"""
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
@@ -13,6 +13,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 
 class BoardPermission(IsAuthenticated):
+    """Доступ к доске (разрешено только создателю)"""
     def has_object_permission(self, request, view, obj: Board):
         filters: dict = {'user': request.user, 'board': obj}
         if request.method not in permissions.SAFE_METHODS:
@@ -22,6 +23,7 @@ class BoardPermission(IsAuthenticated):
 
 
 class GoalCategoryPermissions(IsAuthenticated):
+    """Доступ к доске (разрешено создателю и редактору)"""
     def has_object_permission(self, request, view, obj: GoalCategory):
         filters: dict = {'user': request.user, 'board': obj.board}
         if request.method not in permissions.SAFE_METHODS:
@@ -31,6 +33,7 @@ class GoalCategoryPermissions(IsAuthenticated):
 
 
 class GoalPermissions(IsAuthenticated):
+    """Доступ к цели (разрешено создателю и редактору)"""
     def has_object_permission(self, request, view, obj: Goal):
         filters: dict = {'user': request.user, 'board': obj.category.board}
         if request.method not in permissions.SAFE_METHODS:
@@ -39,6 +42,7 @@ class GoalPermissions(IsAuthenticated):
 
 
 class CommentsPermissions(IsAuthenticated):
+    """Доступ к комментариям"""
     def has_object_permission(self, request, view, obj: GoalComment):
         return any((
                 request.method in permissions.SAFE_METHODS,
